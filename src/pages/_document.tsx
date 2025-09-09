@@ -3,6 +3,12 @@ import { Html, Head, Main, NextScript } from "next/document";
 export default function Document() {
     return (
         <Html lang="en">
+            <title>GitHub Profile Analyzer - In-Depth Stats & Insights</title>
+            <meta
+                name="description"
+                content="Generate a beautiful, shareable dashboard of any GitHub user or organization's coding stats, top languages, and most popular repositories."
+            />
+
             <Head>
                 {/* --- ФАВИКОНКИ И МЕТА-ТЕГИ --- */}
                 <link
