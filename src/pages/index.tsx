@@ -178,12 +178,24 @@ export default function HomePage() {
                 >
                     {/* --- ВЕРСИЯ ДЛЯ ДЕСКТОПОВ (прячется на мобильных) --- */}
                     <TabsList className="hidden md:grid w-full grid-cols-4">
-                        <TabsTrigger value="how-it-works">
+                        <TabsTrigger
+                            value="how-it-works"
+                            className="cursor-pointer"
+                        >
                             How It Works
                         </TabsTrigger>
-                        <TabsTrigger value="features">Features</TabsTrigger>
-                        <TabsTrigger value="example">Live Example</TabsTrigger>
-                        <TabsTrigger value="faq">FAQ</TabsTrigger>
+                        <TabsTrigger
+                            value="features"
+                            className="cursor-pointer"
+                        >
+                            Features
+                        </TabsTrigger>
+                        <TabsTrigger value="example" className="cursor-pointer">
+                            Live Example
+                        </TabsTrigger>
+                        <TabsTrigger value="faq" className="cursor-pointer">
+                            FAQ
+                        </TabsTrigger>
                     </TabsList>
 
                     {/* --- ВЕРСИЯ ДЛЯ МОБИЛЬНЫХ (прячется на десктопах) --- */}

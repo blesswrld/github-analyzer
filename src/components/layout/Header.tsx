@@ -75,7 +75,7 @@ export default function Header() {
                                 variant="ghost"
                                 className="relative h-8 w-8 rounded-full"
                             >
-                                <Avatar className="h-8 w-8">
+                                <Avatar className="h-8 w-8 cursor-pointer">
                                     <AvatarImage
                                         src={user.user_metadata?.avatar_url}
                                         alt={user.user_metadata?.user_name}
@@ -93,7 +93,10 @@ export default function Header() {
                                 {user.user_metadata?.user_name || "My Account"}
                             </DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={handleLogout}>
+                            <DropdownMenuItem
+                                onClick={handleLogout}
+                                className="cursor-pointer"
+                            >
                                 Logout
                             </DropdownMenuItem>
                         </DropdownMenuContent>

@@ -138,7 +138,11 @@ export default function AnalysisPage({ analysis }: AnalysisPageProps) {
                             {analysis.github_username}
                         </span>
                     </h1>
-                    <Button variant="outline" onClick={handleShare}>
+                    <Button
+                        variant="outline"
+                        className=" cursor-pointer"
+                        onClick={handleShare}
+                    >
                         <Share2 className="mr-2 h-4 w-4" />
                         Share
                     </Button>

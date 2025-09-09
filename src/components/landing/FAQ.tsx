@@ -9,13 +9,15 @@ export function FAQ() {
     return (
         <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="item-1">
-                <AccordionTrigger>Is this service free?</AccordionTrigger>
+                <AccordionTrigger className="cursor-pointer">
+                    Is this service free?
+                </AccordionTrigger>
                 <AccordionContent>
                     Yes, GitHub Analyzer is completely free to use.
                 </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-2">
-                <AccordionTrigger>
+                <AccordionTrigger className="cursor-pointer">
                     Do you store my private data?
                 </AccordionTrigger>
                 <AccordionContent>
@@ -25,7 +27,9 @@ export function FAQ() {
                 </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-3">
-                <AccordionTrigger>Why should I log in?</AccordionTrigger>
+                <AccordionTrigger className="cursor-pointer">
+                    Why should I log in?
+                </AccordionTrigger>
                 <AccordionContent>
                     Logging in with your GitHub account provides you with a
                     higher API rate limit from GitHub, which can be useful for
