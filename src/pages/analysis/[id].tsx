@@ -100,7 +100,7 @@ export default function AnalysisPage({ analysis }: AnalysisPageProps) {
     return (
         <main className="container mx-auto p-4 md:p-8">
             {/* Выносим заголовок и кнопку Share наверх для лучшей структуры */}
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex flex-wrap gap-y-2 justify-between items-center mb-6">
                 <h1 className="text-2xl md:text-4xl font-bold">
                     Analysis for{" "}
                     <span className="text-primary">
