@@ -66,8 +66,16 @@ export default async function handler(
         // --- РУЧНОЙ ЦИКЛ ПАГИНАЦИИ ДЛЯ ПУБЛИЧНЫХ ДАННЫХ ---
         let page = 1;
         const per_page = 100;
+        const MAX_PAGES = 5; // <-- Ограничиваем до 5 страниц (5 * 100 = 500 репо)
 
-        while (true) {
+        // Добавляем параметр sort в запросы
+        const repoRequestParams = {
+            per_page,
+            sort: "pushed", // Сортируем по недавней активности, можно 'updated' или 'stars'
+            direction: "desc",
+        };
+
+        while (page <= MAX_PAGES) {
             let currentPageRepos: ReposResponse["data"] = [];
 
             // Пробуем получить данные как для пользователя
@@ -76,7 +84,7 @@ export default async function handler(
                 if (page === 1) {
                     const { data: userProfile } = await octokit.request(
                         "GET /users/{username}",
-                        { username }
+                        { ...repoRequestParams, username, type: "owner", page } // <-- Добавляем параметры
                     );
                     profileData = userProfile;
                 }
@@ -92,7 +100,12 @@ export default async function handler(
                     if (page === 1) {
                         const { data: orgProfile } = await octokit.request(
                             "GET /orgs/{org}",
-                            { org: username }
+                            {
+                                ...repoRequestParams,
+                                org: username,
+                                type: "public",
+                                page,
+                            } // <-- Добавляем параметры
                         );
                         profileData = orgProfile;
                     }
@@ -134,6 +147,11 @@ export default async function handler(
                 `Failed to fetch profile data for ${username}. It might not exist or there was a network error.`
             );
         }
+
+        // Если мы достигли лимита страниц, а на последней странице все еще было 100 репо,
+        // значит, мы, скорее всего, обрезали данные.
+        const isPartial =
+            page > MAX_PAGES && reposData.length === MAX_PAGES * per_page;
 
         console.log(`Total repos fetched for ${username}: ${reposData.length}`);
 
@@ -203,6 +221,7 @@ export default async function handler(
             totalForks,
             mostStarredRepo,
             topRepos, // <-- ДОБАВЛЯЕМ НАШ МАССИВ ТОП 5 РЕПО
+            isPartial, // <-- ДОБАВЛЯЕМ ФЛАГ В ДАННЫЕ
         };
 
         const { data: analysisResult, error: insertError } = await supabase

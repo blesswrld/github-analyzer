@@ -11,6 +11,8 @@ import LanguagesChart from "@/components/charts/LanguagesChart";
 import { toast } from "sonner";
 import TopReposCard from "@/components/analysis/TopReposCard";
 import Head from "next/head";
+import { MotionDiv } from "@/components/MotionDiv"; // Импортируем наш компонент
+import { AlertCircle } from "lucide-react"; // Иконка для примечания
 
 // Определяем подробные типы для наших данных
 type ProfileInfo = {
@@ -47,6 +49,7 @@ type AnalysisData = {
         totalForks: number;
         mostStarredRepo: MostStarredRepo;
         topRepos: RepoData[]; // <-- ДОБАВЛЯЕМ ТИП
+        isPartial?: boolean; // <-- ДОБАВЛЯЕМ ТИП
     };
 };
 
@@ -107,8 +110,15 @@ export default function AnalysisPage({ analysis }: AnalysisPageProps) {
     }
 
     // Деструктурируем новые данные
-    const { profileInfo, totalStars, totalForks, languages, topRepos } =
-        analysis.stats_data;
+    // isPartial, по умолчанию false
+    const {
+        profileInfo,
+        totalStars,
+        totalForks,
+        languages,
+        topRepos,
+        isPartial = false,
+    } = analysis.stats_data;
 
     // Когда данные есть, генерируем динамические теги
     const pageTitle = `Analysis for ${
@@ -120,6 +130,9 @@ export default function AnalysisPage({ analysis }: AnalysisPageProps) {
         analysis.stats_data.languages[0]?.label || ""
     } and ${analysis.stats_data.languages[1]?.label || ""}.`;
 
+    // --- Ограничиваем количество языков для графика ---
+    const topLanguages = languages.slice(0, 15);
+
     // Когда загрузка завершена и данные есть, рендерим основной контент
     return (
         <>
@@ -130,8 +143,13 @@ export default function AnalysisPage({ analysis }: AnalysisPageProps) {
             </Head>
 
             <main className="container mx-auto p-4 md:p-8">
-                {/* Выносим заголовок и кнопку Share наверх для лучшей структуры */}
-                <div className="flex flex-wrap gap-y-2 justify-between items-center mb-6">
+                {/* Анимируем заголовок и кнопку */}
+                <MotionDiv
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="flex flex-wrap gap-y-2 justify-between items-center mb-6"
+                >
                     <h1 className="text-2xl md:text-4xl font-bold">
                         Analysis for{" "}
                         <span className="text-primary">
@@ -146,11 +164,29 @@ export default function AnalysisPage({ analysis }: AnalysisPageProps) {
                         <Share2 className="mr-2 h-4 w-4" />
                         Share
                     </Button>
-                </div>
+                </MotionDiv>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:items-start">
+                <MotionDiv
+                    className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:items-start"
+                    initial="hidden"
+                    animate="visible"
+                    variants={{
+                        visible: { transition: { staggerChildren: 0.1 } }, // Каждый дочерний элемент будет появляться с задержкой 0.1с
+                    }}
+                >
                     {/* Левая колонка: Профиль и ключевые метрики */}
-                    <div className="lg:col-span-1 space-y-6">
+                    <MotionDiv
+                        className="lg:col-span-1 space-y-6"
+                        // Дочерние элементы этого div тоже будут анимироваться
+                        variants={{
+                            hidden: { opacity: 0, y: 20 },
+                            visible: {
+                                opacity: 1,
+                                y: 0,
+                                transition: { duration: 0.5 },
+                            },
+                        }}
+                    >
                         <Card>
                             <CardHeader className="flex flex-row items-center gap-4">
                                 <Avatar className="h-16 w-16">
@@ -163,7 +199,7 @@ export default function AnalysisPage({ analysis }: AnalysisPageProps) {
                                     </AvatarFallback>
                                 </Avatar>
                                 <div>
-                                    <h2 className="text-2xl font-bold">
+                                    <h2 className="text-2xl font-bold break-all">
                                         {profileInfo.name}
                                     </h2>
                                     <p className="text-muted-foreground">
@@ -177,6 +213,23 @@ export default function AnalysisPage({ analysis }: AnalysisPageProps) {
                                 </p>
                             </CardContent>
                         </Card>
+
+                        {/* --- МЕСТО ДЛЯ ПРИМЕЧАНИЯ --- */}
+                        {isPartial && (
+                            <div className="flex items-start gap-2 text-xs text-muted-foreground p-3 border rounded-lg bg-muted/50">
+                                <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5" />
+                                <span>
+                                    Note: For very large profiles, metrics for{" "}
+                                    <b>
+                                        Total Stars, Total Forks, Languages, and
+                                        Top Repositories
+                                    </b>{" "}
+                                    are calculated based on the most recent 500
+                                    repositories. The total repository count is
+                                    accurate.
+                                </span>
+                            </div>
+                        )}
 
                         {/* Карточки с метриками */}
                         <div className="grid grid-cols-2 gap-4">
@@ -217,10 +270,20 @@ export default function AnalysisPage({ analysis }: AnalysisPageProps) {
                         {topRepos && topRepos.length > 0 && (
                             <TopReposCard repos={topRepos} />
                         )}
-                    </div>
+                    </MotionDiv>
 
                     {/* Правая колонка: График языков */}
-                    <div className="lg:col-span-2 lg:sticky lg:top-8">
+                    <MotionDiv
+                        className="lg:col-span-2 lg:sticky lg:top-8"
+                        variants={{
+                            hidden: { opacity: 0, y: 20 },
+                            visible: {
+                                opacity: 1,
+                                y: 0,
+                                transition: { duration: 0.5 },
+                            },
+                        }}
+                    >
                         <Card className="h-full">
                             <CardHeader>
                                 <CardTitle>
@@ -228,8 +291,9 @@ export default function AnalysisPage({ analysis }: AnalysisPageProps) {
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="px-0 sm:px-2 md:px-6">
-                                {languages && languages.length > 0 ? (
-                                    <LanguagesChart data={languages} />
+                                {topLanguages && topLanguages.length > 0 ? (
+                                    // Передаем в график ОБРЕЗАННЫЙ массив
+                                    <LanguagesChart data={topLanguages} />
                                 ) : (
                                     <p>
                                         No public repositories with language
@@ -238,8 +302,8 @@ export default function AnalysisPage({ analysis }: AnalysisPageProps) {
                                 )}
                             </CardContent>
                         </Card>
-                    </div>
-                </div>
+                    </MotionDiv>
+                </MotionDiv>
             </main>
         </>
     );

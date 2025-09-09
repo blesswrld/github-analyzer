@@ -21,11 +21,7 @@ import { Features } from "@/components/landing/Features";
 import { LiveExample } from "@/components/landing/LiveExample";
 import { FAQ } from "@/components/landing/FAQ";
 
-// Импортируем все скелетоны
-import { HowItWorksSkeleton } from "@/components/skeletons/landing/HowItWorksSkeleton";
-import { FeaturesSkeleton } from "@/components/skeletons/landing/FeaturesSkeleton";
-import { LiveExampleSkeleton } from "@/components/skeletons/landing/LiveExampleSkeleton";
-import { FAQSkeleton } from "@/components/skeletons/landing/FAQSkeleton";
+import { Dices } from "lucide-react"; // Иконка для кнопки
 
 // Тип для ответа от нашего API
 type AnalysisResponse = {
@@ -116,6 +112,29 @@ export default function HomePage() {
         }
     };
 
+    const popularProfiles = [
+        "vercel",
+        "microsoft",
+        "google",
+        "facebook",
+        "freecodecamp",
+    ];
+
+    const handleSurpriseMe = () => {
+        // Выбираем случайный профиль, который не равен текущему
+        let randomProfile = username;
+        while (randomProfile === username) {
+            randomProfile =
+                popularProfiles[
+                    Math.floor(Math.random() * popularProfiles.length)
+                ];
+        }
+
+        // Устанавливаем его в поле ввода и сразу запускаем анализ
+        setUsername(randomProfile);
+        mutate(randomProfile);
+    };
+
     // Показываем скелетон, пока сессия загружается
     if (isSessionLoading) {
         return <HomepageSkeleton />;
@@ -150,6 +169,17 @@ export default function HomePage() {
                     {isPending ? "Analyzing..." : "Analyze"}
                 </Button>
             </form>
+
+            {/* --- Кнопка Surprise Me! --- */}
+            <Button
+                variant="ghost"
+                onClick={handleSurpriseMe}
+                disabled={isPending}
+                className="mb-8"
+            >
+                <Dices className="mr-2 h-4 w-4" />
+                Surprise Me!
+            </Button>
 
             {/* Используем isPending */}
             {isPending && (
