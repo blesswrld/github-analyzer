@@ -13,17 +13,15 @@ import {
 } from "@/components/ui/dialog";
 import { ZoomIn } from "lucide-react";
 import Link from "next/link";
+import { LiveExampleSkeleton } from "./LiveExampleSkeleton"; // Импортируем наш скелетон
 
-export function LiveExample() {
+// Добавляем проп isLoading
+interface LiveExampleProps {
+    isLoading?: boolean;
+}
+
+export function LiveExample({ isLoading }: LiveExampleProps) {
     const { theme } = useTheme();
-    const [mounted, setMounted] = useState(false);
-
-    // Этот хук гарантирует, что компонент будет отрендерен на клиенте
-    // перед тем, как мы попытаемся получить доступ к теме.
-    // Это предотвращает ошибки гидратации (mismatch).
-    useEffect(() => {
-        setMounted(true);
-    }, []);
 
     // Определяем, какое изображение показывать, на основе текущей темы
     // Указываем пути к вашим изображениям
@@ -32,13 +30,9 @@ export function LiveExample() {
             ? "/images/search-example-dark.jpg"
             : "/images/search-example-light.jpg";
 
-    // Пока компонент не смонтирован, можно ничего не показывать или показать скелетон
-    if (!mounted) {
-        return (
-            <div className="border rounded-lg p-4 bg-muted/40">
-                <div className="aspect-[3/2] w-full bg-muted rounded-md shadow-lg" />
-            </div>
-        );
+    // Если isLoading === true, показываем скелетон
+    if (isLoading) {
+        return <LiveExampleSkeleton />;
     }
 
     return (

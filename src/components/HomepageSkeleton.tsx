@@ -1,4 +1,6 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import { HowItWorksSkeleton } from "@/components/landing/HowItWorksSkeleton";
+import { Tabs, TabsContent, TabsList } from "@/components/ui/tabs";
 
 export default function HomepageSkeleton() {
     return (
@@ -16,6 +18,24 @@ export default function HomepageSkeleton() {
             <div className="w-full max-w-sm flex gap-2 mb-8">
                 <Skeleton className="h-10 flex-grow" />
                 <Skeleton className="h-10 w-24" />
+            </div>
+
+            {/* --- Скелетон для Табов --- */}
+            <div className="w-full max-w-4xl mt-16">
+                <Tabs defaultValue="how-it-works">
+                    {/* Скелетон для переключателей табов */}
+                    <TabsList className="grid w-full grid-cols-2 md:grid-cols-4">
+                        <Skeleton className="h-10 w-full" />
+                        <Skeleton className="h-10 w-full" />
+                        <Skeleton className="h-10 w-full" />
+                        <Skeleton className="h-10 w-full" />
+                    </TabsList>
+
+                    {/* Показываем скелетон для первой вкладки по умолчанию */}
+                    <TabsContent value="how-it-works" className="mt-6">
+                        <HowItWorksSkeleton />
+                    </TabsContent>
+                </Tabs>
             </div>
         </main>
     );

@@ -21,6 +21,12 @@ import { Features } from "@/components/landing/Features";
 import { LiveExample } from "@/components/landing/LiveExample";
 import { FAQ } from "@/components/landing/FAQ";
 
+// Импортируем все скелетоны
+import { HowItWorksSkeleton } from "@/components/landing/HowItWorksSkeleton";
+import { FeaturesSkeleton } from "@/components/landing/FeaturesSkeleton";
+import { LiveExampleSkeleton } from "@/components/landing/LiveExampleSkeleton";
+import { FAQSkeleton } from "@/components/landing/FAQSkeleton";
+
 // Тип для ответа от нашего API
 type AnalysisResponse = {
     analysisId: string;
