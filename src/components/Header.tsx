@@ -10,6 +10,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ThemeToggle } from "./ThemeToggle";
 
 export default function Header() {
     const supabaseClient = useSupabaseClient();
@@ -27,28 +28,38 @@ export default function Header() {
 
     return (
         <header className="container mx-auto flex justify-between items-center p-4 border-b">
-            <Link href="/" className="text-2xl font-bold">
+            <Link href="/" className="text-xl md:text-2xl font-bold">
                 GitHub Analyzer
             </Link>
-            <div>
-                {!user ? (
+
+            <div className="flex items-center gap-4">
+                {/* Если пользователь не залогинен, показываем кнопку входа */}
+                {!user && (
                     <Button onClick={handleLogin}>Login with GitHub</Button>
-                ) : (
+                )}
+
+                {/* Если пользователь залогинен, показываем его аватар и выпадающее меню */}
+                {user && (
                     <DropdownMenu>
-                        <DropdownMenuTrigger>
-                            <Avatar>
-                                <AvatarImage
-                                    src={user.user_metadata?.avatar_url}
-                                />
-                                <AvatarFallback>
-                                    {user.user_metadata?.user_name?.substring(
-                                        0,
-                                        2
-                                    )}
-                                </AvatarFallback>
-                            </Avatar>
+                        <DropdownMenuTrigger asChild>
+                            <Button
+                                variant="ghost"
+                                className="relative h-8 w-8 rounded-full"
+                            >
+                                <Avatar className="h-8 w-8">
+                                    <AvatarImage
+                                        src={user.user_metadata?.avatar_url}
+                                        alt={user.user_metadata?.user_name}
+                                    />
+                                    <AvatarFallback>
+                                        {user.user_metadata?.user_name
+                                            ?.substring(0, 2)
+                                            .toUpperCase()}
+                                    </AvatarFallback>
+                                </Avatar>
+                            </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent>
+                        <DropdownMenuContent align="end">
                             <DropdownMenuLabel>My Account</DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem onClick={handleLogout}>
@@ -57,6 +68,9 @@ export default function Header() {
                         </DropdownMenuContent>
                     </DropdownMenu>
                 )}
+
+                {/* Переключатель темы всегда виден */}
+                <ThemeToggle />
             </div>
         </header>
     );

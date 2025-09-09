@@ -6,6 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Star, GitFork, Users, Book } from "lucide-react";
 import Link from "next/link";
+import { toast } from "sonner";
+import { Share2 } from "lucide-react"; // Иконка для кнопки
+import { Button } from "@/components/ui/button";
 
 // Определяем подробные типы для наших данных
 type ProfileInfo = {
@@ -15,12 +18,15 @@ type ProfileInfo = {
     public_repos: number;
     followers: number;
 };
+
 type MostStarredRepo = {
     name: string;
     stars: number;
     url: string;
 };
+
 type LanguageData = { id: string; label: string; value: number };
+
 type AnalysisData = {
     github_username: string;
     stats_data: {
@@ -31,11 +37,22 @@ type AnalysisData = {
         mostStarredRepo: MostStarredRepo;
     };
 };
+
 type AnalysisPageProps = {
     analysis: AnalysisData | null;
 };
 
 export default function AnalysisPage({ analysis }: AnalysisPageProps) {
+    const handleShare = () => {
+        const url = window.location.href;
+        navigator.clipboard.writeText(url).then(() => {
+            toast.success("Link Copied!", {
+                description: "You can now share this analysis with others.",
+                duration: 3000,
+            });
+        });
+    };
+
     if (!analysis) {
         return (
             <div>
@@ -58,6 +75,20 @@ export default function AnalysisPage({ analysis }: AnalysisPageProps) {
         <div>
             <Header />
             <main className="container mx-auto p-4 md:p-8">
+                {/* Выносим заголовок и кнопку Share наверх для лучшей структуры */}
+                <div className="flex justify-between items-center mb-6">
+                    <h1 className="text-3xl md:text-4xl font-bold">
+                        Analysis for{" "}
+                        <span className="text-primary">
+                            {analysis.github_username}
+                        </span>
+                    </h1>
+                    <Button variant="outline" onClick={handleShare}>
+                        <Share2 className="mr-2 h-4 w-4" />
+                        Share
+                    </Button>
+                </div>
+
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* Левая колонка: Профиль и ключевые метрики */}
                     <div className="lg:col-span-1 space-y-6">
@@ -73,32 +104,39 @@ export default function AnalysisPage({ analysis }: AnalysisPageProps) {
                                     </AvatarFallback>
                                 </Avatar>
                                 <div>
-                                    <h1 className="text-2xl font-bold">
+                                    <h2 className="text-2xl font-bold">
                                         {profileInfo.name}
-                                    </h1>
+                                    </h2>
                                     <p className="text-muted-foreground">
                                         @{analysis.github_username}
                                     </p>
                                 </div>
                             </CardHeader>
                             <CardContent>
-                                <p className="text-sm">{profileInfo.bio}</p>
+                                <p className="text-sm">
+                                    {profileInfo.bio || "No bio provided."}
+                                </p>
                             </CardContent>
                         </Card>
+
+                        {/* Карточки с метриками */}
                         <div className="grid grid-cols-2 gap-4">
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle className="text-sm">
-                                        Followers
-                                    </CardTitle>
-                                </CardHeader>
-                                <CardContent>
-                                    <p className="text-2xl font-bold flex items-center gap-2">
-                                        <Users size={20} />
-                                        {profileInfo.followers.toLocaleString()}
-                                    </p>
-                                </CardContent>
-                            </Card>
+                            {/* Показываем карточку Followers только если их больше 0 (у организаций их нет) */}
+                            {profileInfo.followers > 0 && (
+                                <Card>
+                                    <CardHeader>
+                                        <CardTitle className="text-sm">
+                                            Followers
+                                        </CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <p className="text-2xl font-bold flex items-center gap-2">
+                                            <Users size={20} />
+                                            {profileInfo.followers.toLocaleString()}
+                                        </p>
+                                    </CardContent>
+                                </Card>
+                            )}
                             <Card>
                                 <CardHeader>
                                     <CardTitle className="text-sm">
@@ -139,6 +177,7 @@ export default function AnalysisPage({ analysis }: AnalysisPageProps) {
                                 </CardContent>
                             </Card>
                         </div>
+
                         <Card>
                             <CardHeader>
                                 <CardTitle>Most Starred Repository</CardTitle>
@@ -148,7 +187,7 @@ export default function AnalysisPage({ analysis }: AnalysisPageProps) {
                                     href={mostStarredRepo.url}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="font-semibold text-primary hover:underline"
+                                    className="font-semibold text-primary hover:underline break-all"
                                 >
                                     {mostStarredRepo.name}
                                 </Link>
