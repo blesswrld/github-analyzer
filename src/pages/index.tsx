@@ -26,8 +26,22 @@ export default function HomePage() {
 
     // useEffect для установки username после загрузки сессии
     useEffect(() => {
+        // Этот эффект выполняется только на клиенте
         if (!isSessionLoading) {
-            setUsername(user?.user_metadata?.user_name || "gaearon");
+            // Проверяем, видел ли пользователь дефолтное значение раньше
+            const hasSeenDefault = localStorage.getItem(
+                "hasSeenDefaultAnalyzerUsername"
+            );
+
+            if (!hasSeenDefault) {
+                // Если не видел, устанавливаем дефолтное значение
+                const defaultUsername =
+                    user?.user_metadata?.user_name || "facebook";
+                setUsername(defaultUsername);
+                // И сразу же ставим флаг, что он его увидел
+                localStorage.setItem("hasSeenDefaultAnalyzerUsername", "true");
+            }
+            // Если флаг уже стоит, ничего не делаем, и useState("") оставит поле пустым.
         }
     }, [isSessionLoading, user]);
 
@@ -57,7 +71,9 @@ export default function HomePage() {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (username.trim()) {
-            // Передаем просто строку, как и раньше
+            // Когда пользователь что-то анализирует, мы также можем считать, что он
+            // уже "использовал" приложение, и больше не показывать ему дефолтное значение.
+            localStorage.setItem("hasSeenDefaultAnalyzerUsername", "true");
             mutate(username.trim());
         }
     };
@@ -87,7 +103,7 @@ export default function HomePage() {
                 {/* Используем isPending */}
                 <Input
                     type="text"
-                    placeholder="e.g., torvalds"
+                    placeholder="e.g., facebook"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     disabled={isPending}

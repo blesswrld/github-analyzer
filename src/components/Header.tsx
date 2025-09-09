@@ -4,6 +4,7 @@ import {
 } from "@supabase/auth-helpers-react";
 import { Button } from "./ui/button";
 import Link from "next/link";
+import { useRouter } from "next/router"; // Импортируем useRouter
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -22,6 +23,10 @@ export default function Header() {
     const { isLoading, session } = useSessionContext();
     const user = session?.user;
 
+    // Получаем текущий путь страницы
+    const router = useRouter();
+    const isHomePage = router.pathname === "/";
+
     const handleLogin = async () => {
         await supabaseClient.auth.signInWithOAuth({ provider: "github" });
     };
@@ -30,12 +35,14 @@ export default function Header() {
         await supabaseClient.auth.signOut();
     };
 
-    // Если сессия еще проверяется, показываем скелетон для хедера
+    // Скелетон для состояния загрузки
     if (isLoading) {
         return (
-            <header className="container mx-auto flex justify-between items-center p-4 border-b">
-                <Skeleton className="h-7 w-48" />
-                <div className="flex items-center gap-4">
+            <header className="container mx-auto flex justify-between items-center p-4 h-20">
+                {/* Показываем скелетон заголовка, если это не главная страница */}
+                {!isHomePage && <Skeleton className="h-7 w-48" />}
+                <div className="flex items-center gap-4 ml-auto">
+                    {/* ml-auto для прижатия вправо */}
                     <Skeleton className="h-10 w-32" />
                     <Skeleton className="h-10 w-10" />
                 </div>
@@ -46,9 +53,15 @@ export default function Header() {
     // Когда проверка завершена, показываем реальный хедер
     return (
         <header className="container mx-auto flex justify-between items-center p-4 border-b">
-            <Link href="/" className="text-xl md:text-2xl font-bold">
-                GitHub Analyzer
-            </Link>
+            {/* Показываем заголовок-ссылку только если мы НЕ на главной странице. */}
+            {!isHomePage ? (
+                <Link href="/" className="text-xl md:text-2xl font-bold">
+                    GitHub Analyzer
+                </Link>
+            ) : (
+                // Если мы на главной, оставляем пустое место, чтобы кнопки были справа
+                <div />
+            )}
 
             <div className="flex items-center gap-4">
                 {/* Если пользователь не залогинен, показываем кнопку входа */}
