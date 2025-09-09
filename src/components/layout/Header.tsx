@@ -2,7 +2,7 @@ import {
     useSupabaseClient,
     useSessionContext,
 } from "@supabase/auth-helpers-react";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useRouter } from "next/router"; // Импортируем useRouter
 import {
@@ -14,8 +14,8 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ThemeToggle } from "./ThemeToggle";
-import { Skeleton } from "./ui/skeleton";
+import { ThemeToggle } from "@/components/layout/ThemeToggle";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Header() {
     const supabaseClient = useSupabaseClient();

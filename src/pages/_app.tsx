@@ -6,12 +6,12 @@ import { createPagesBrowserClient } from "@supabase/auth-helpers-nextjs";
 import { SessionContextProvider } from "@supabase/auth-helpers-react";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/sonner";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import AnalysisSkeleton from "@/components/AnalysisSkeleton"; // Импортируем скелетон
+import AnalysisSkeleton from "@/components/skeletons/AnalysisSkeleton"; // Импортируем скелетон
 
 // --- ИМПОРТИРУЕМ ШРИФТЫ ---
 import { GeistSans } from "geist/font/sans";

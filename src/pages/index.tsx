@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useMutation } from "@tanstack/react-query";
 import { useSessionContext } from "@supabase/auth-helpers-react";
-import HomepageSkeleton from "@/components/HomepageSkeleton";
+import HomepageSkeleton from "@/components/skeletons/HomepageSkeleton";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -22,10 +22,10 @@ import { LiveExample } from "@/components/landing/LiveExample";
 import { FAQ } from "@/components/landing/FAQ";
 
 // Импортируем все скелетоны
-import { HowItWorksSkeleton } from "@/components/landing/HowItWorksSkeleton";
-import { FeaturesSkeleton } from "@/components/landing/FeaturesSkeleton";
-import { LiveExampleSkeleton } from "@/components/landing/LiveExampleSkeleton";
-import { FAQSkeleton } from "@/components/landing/FAQSkeleton";
+import { HowItWorksSkeleton } from "@/components/skeletons/landing/HowItWorksSkeleton";
+import { FeaturesSkeleton } from "@/components/skeletons/landing/FeaturesSkeleton";
+import { LiveExampleSkeleton } from "@/components/skeletons/landing/LiveExampleSkeleton";
+import { FAQSkeleton } from "@/components/skeletons/landing/FAQSkeleton";
 
 // Тип для ответа от нашего API
 type AnalysisResponse = {
@@ -44,6 +44,16 @@ export default function HomePage() {
 
     // --- СОСТОЯНИЕ ДЛЯ УПРАВЛЕНИЯ ТАБАМИ ---
     const [activeTab, setActiveTab] = useState("how-it-works");
+
+    // --- Читаем хеш при загрузке ---
+    useEffect(() => {
+        // Этот эффект отвечает за установку активного таба из URL
+        const hash = window.location.hash.replace("#", "");
+        const validTabs = ["how-it-works", "features", "example", "faq"];
+        if (hash && validTabs.includes(hash)) {
+            setActiveTab(hash);
+        }
+    }, []); // Пустой массив зависимостей, чтобы сработал только один раз при монтировании
 
     // useEffect для установки username после загрузки сессии
     useEffect(() => {
@@ -88,6 +98,13 @@ export default function HomePage() {
             router.push(`/analysis/${data.analysisId}`);
         },
     });
+
+    // --- Обновляем хеш при смене таба ---
+    const handleTabChange = (value: string) => {
+        setActiveTab(value);
+        // Обновляем URL, не перезагружая страницу
+        router.push(`/#${value}`, undefined, { shallow: true });
+    };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -156,7 +173,7 @@ export default function HomePage() {
                 {/* Мы используем value и onValueChange, чтобы контролировать состояние */}
                 <Tabs
                     value={activeTab}
-                    onValueChange={setActiveTab}
+                    onValueChange={handleTabChange}
                     className="w-full"
                 >
                     {/* --- ВЕРСИЯ ДЛЯ ДЕСКТОПОВ (прячется на мобильных) --- */}
@@ -171,7 +188,10 @@ export default function HomePage() {
 
                     {/* --- ВЕРСИЯ ДЛЯ МОБИЛЬНЫХ (прячется на десктопах) --- */}
                     <div className="block md:hidden">
-                        <Select value={activeTab} onValueChange={setActiveTab}>
+                        <Select
+                            value={activeTab}
+                            onValueChange={handleTabChange}
+                        >
                             <SelectTrigger>
                                 <SelectValue placeholder="Select a section..." />
                             </SelectTrigger>

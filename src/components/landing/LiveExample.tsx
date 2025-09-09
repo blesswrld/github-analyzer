@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
 import {
     Dialog,
     DialogContent,
@@ -13,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { ZoomIn } from "lucide-react";
 import Link from "next/link";
-import { LiveExampleSkeleton } from "./LiveExampleSkeleton"; // Импортируем наш скелетон
+import { LiveExampleSkeleton } from "../skeletons/landing/LiveExampleSkeleton"; // Импортируем наш скелетон
 
 // Добавляем проп isLoading
 interface LiveExampleProps {

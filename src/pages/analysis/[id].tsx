@@ -4,12 +4,12 @@ import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import StatCard from "@/components/StatCard";
+import StatCard from "@/components/analysis/StatCard";
 import { Star, GitFork, Users, Book, Share2 } from "lucide-react";
-import AnalysisSkeleton from "@/components/AnalysisSkeleton";
+import AnalysisSkeleton from "@/components/skeletons/AnalysisSkeleton";
 import LanguagesChart from "@/components/charts/LanguagesChart";
 import { toast } from "sonner";
-import TopReposCard from "@/components/TopReposCard";
+import TopReposCard from "@/components/analysis/TopReposCard";
 
 // Определяем подробные типы для наших данных
 type ProfileInfo = {

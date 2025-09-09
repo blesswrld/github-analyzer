@@ -1,5 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import { HowItWorksSkeleton } from "@/components/landing/HowItWorksSkeleton";
+import { HowItWorksSkeleton } from "@/components/skeletons/landing/HowItWorksSkeleton";
 import { Tabs, TabsContent, TabsList } from "@/components/ui/tabs";
 
 export default function HomepageSkeleton() {
