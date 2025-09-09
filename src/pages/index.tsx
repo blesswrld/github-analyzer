@@ -20,8 +20,8 @@ import { HowItWorks } from "@/components/landing/HowItWorks";
 import { Features } from "@/components/landing/Features";
 import { LiveExample } from "@/components/landing/LiveExample";
 import { FAQ } from "@/components/landing/FAQ";
-
 import { Dices } from "lucide-react"; // Иконка для кнопки
+import { popularProfiles } from "@/data/popularProfiles"; // Импортируем массив
 
 // Тип для ответа от нашего API
 type AnalysisResponse = {
@@ -111,14 +111,6 @@ export default function HomePage() {
             mutate(username.trim());
         }
     };
-
-    const popularProfiles = [
-        "vercel",
-        "microsoft",
-        "google",
-        "facebook",
-        "freecodecamp",
-    ];
 
     const handleSurpriseMe = () => {
         // Выбираем случайный профиль, который не равен текущему
