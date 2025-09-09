@@ -11,7 +11,7 @@ import LanguagesChart from "@/components/charts/LanguagesChart";
 import { toast } from "sonner";
 import TopReposCard from "@/components/analysis/TopReposCard";
 import Head from "next/head";
-import { MotionDiv } from "@/components/MotionDiv"; // Импортируем наш компонент
+import { MotionDiv } from "@/components/ui/MotionDiv"; // Импортируем наш компонент
 import { AlertCircle } from "lucide-react"; // Иконка для примечания
 import Link from "next/link";
 
