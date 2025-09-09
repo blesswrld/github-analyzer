@@ -1,6 +1,8 @@
 import "@/styles/globals.css";
 
 import type { AppProps } from "next/app";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createPagesBrowserClient } from "@supabase/auth-helpers-nextjs";
 import { SessionContextProvider } from "@supabase/auth-helpers-react";
@@ -8,25 +10,22 @@ import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/sonner";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-
-import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
-import AnalysisSkeleton from "@/components/skeletons/AnalysisSkeleton"; // Импортируем скелетон
-
-// --- ИМПОРТИРУЕМ ШРИФТЫ ---
+import AnalysisSkeleton from "@/components/skeletons/AnalysisSkeleton";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
+import { LoadingProvider, useLoading } from "@/context/LoadingContext";
 
-export default function App({ Component, pageProps }: AppProps) {
-    const [queryClient] = useState(() => new QueryClient());
-    const [supabaseClient] = useState(() => createPagesBrowserClient());
-
+// --- Внутренний компонент-обертка для layout, чтобы иметь доступ ко всем контекстам ---
+function AppLayout({ children }: { children: React.ReactNode }) {
     const router = useRouter();
     const [isPageLoading, setIsPageLoading] = useState(false);
 
+    // Получаем состояние глобальной загрузки из нашего нового контекста
+    const { isGlobalLoading } = useLoading();
+
     useEffect(() => {
         const handleStart = (url: string) => {
-            // Показываем скелетон только для страниц анализа
+            // Показываем скелетон только при переходе на страницу анализа
             if (url.startsWith("/analysis/")) {
                 setIsPageLoading(true);
             }
@@ -47,6 +46,29 @@ export default function App({ Component, pageProps }: AppProps) {
     }, [router]);
 
     return (
+        <div className="flex flex-col min-h-screen">
+            {/* Хедер один на всё приложение */}
+            <Header />
+            <main className="flex-grow">
+                {isPageLoading ? (
+                    <AnalysisSkeleton />
+                ) : (
+                    // Компонент страницы (переданный как children) будет сам решать,
+                    // показывать свой скелетон или нет (например, при прямой загрузке).
+                    children
+                )}
+            </main>
+            {/* Показываем футер, только если НЕТ глобальной загрузки (которую мы контролируем из HomePage) */}
+            {!isGlobalLoading && <Footer />}
+        </div>
+    );
+}
+
+export default function App({ Component, pageProps }: AppProps) {
+    const [queryClient] = useState(() => new QueryClient());
+    const [supabaseClient] = useState(() => createPagesBrowserClient());
+
+    return (
         // --- ПРИМЕНЯЕМ ШРИФТЫ КО ВСЕМУ ПРИЛОЖЕНИЮ ---
         <div
             className={`${GeistSans.variable} ${GeistMono.variable} font-sans`}
@@ -62,19 +84,12 @@ export default function App({ Component, pageProps }: AppProps) {
                     initialSession={pageProps.initialSession}
                 >
                     <QueryClientProvider client={queryClient}>
-                        <div className="flex flex-col min-h-screen">
-                            {/* Хедер один на всё приложение */}
-                            <Header />
-                            <main className="flex-grow">
-                                {isPageLoading ? (
-                                    <AnalysisSkeleton />
-                                ) : (
-                                    /* Компонент страницы будет сам решать, показывать скелетон или нет */
-                                    <Component {...pageProps} />
-                                )}
-                            </main>
-                            <Footer />
-                        </div>
+                        {/* Оборачиваем все в LoadingProvider */}
+                        <LoadingProvider>
+                            <AppLayout>
+                                <Component {...pageProps} />
+                            </AppLayout>
+                        </LoadingProvider>
                         <Toaster />
                     </QueryClientProvider>
                 </SessionContextProvider>
