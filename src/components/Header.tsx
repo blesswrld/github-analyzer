@@ -1,4 +1,7 @@
-import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
+import {
+    useSupabaseClient,
+    useSessionContext,
+} from "@supabase/auth-helpers-react";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import {
@@ -11,21 +14,36 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ThemeToggle } from "./ThemeToggle";
+import { Skeleton } from "./ui/skeleton";
 
 export default function Header() {
     const supabaseClient = useSupabaseClient();
-    const user = useUser();
+    // Получаем состояние загрузки и саму сессию
+    const { isLoading, session } = useSessionContext();
+    const user = session?.user;
 
     const handleLogin = async () => {
-        await supabaseClient.auth.signInWithOAuth({
-            provider: "github",
-        });
+        await supabaseClient.auth.signInWithOAuth({ provider: "github" });
     };
 
     const handleLogout = async () => {
         await supabaseClient.auth.signOut();
     };
 
+    // Если сессия еще проверяется, показываем скелетон для хедера
+    if (isLoading) {
+        return (
+            <header className="container mx-auto flex justify-between items-center p-4 border-b">
+                <Skeleton className="h-7 w-48" />
+                <div className="flex items-center gap-4">
+                    <Skeleton className="h-10 w-32" />
+                    <Skeleton className="h-10 w-10" />
+                </div>
+            </header>
+        );
+    }
+
+    // Когда проверка завершена, показываем реальный хедер
     return (
         <header className="container mx-auto flex justify-between items-center p-4 border-b">
             <Link href="/" className="text-xl md:text-2xl font-bold">
@@ -34,12 +52,10 @@ export default function Header() {
 
             <div className="flex items-center gap-4">
                 {/* Если пользователь не залогинен, показываем кнопку входа */}
-                {!user && (
+                {!user ? (
                     <Button onClick={handleLogin}>Login with GitHub</Button>
-                )}
-
-                {/* Если пользователь залогинен, показываем его аватар и выпадающее меню */}
-                {user && (
+                ) : (
+                    /* Если пользователь залогинен, показываем его аватар и выпадающее меню */
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button
@@ -60,7 +76,9 @@ export default function Header() {
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                            <DropdownMenuLabel>
+                                {user.user_metadata?.user_name || "My Account"}
+                            </DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem onClick={handleLogout}>
                                 Logout

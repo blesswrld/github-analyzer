@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { useMutation } from "@tanstack/react-query";
-import Header from "@/components/Header";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Terminal } from "lucide-react";
+import { useSessionContext } from "@supabase/auth-helpers-react";
+import HomepageSkeleton from "@/components/HomepageSkeleton";
 
 // Тип для ответа от нашего API
 type AnalysisResponse = {
@@ -15,6 +16,9 @@ type AnalysisResponse = {
 };
 
 export default function HomePage() {
+    // Получаем состояние загрузки сессии
+    const { isLoading: isSessionLoading } = useSessionContext();
+
     const [username, setUsername] = useState("gaearon");
     const router = useRouter();
 
@@ -49,9 +53,14 @@ export default function HomePage() {
         }
     };
 
+    // Показываем скелетон, пока сессия загружается
+    if (isSessionLoading) {
+        return <HomepageSkeleton />;
+    }
+
+    // Когда загрузка сессии завершена, показываем основной контент
     return (
         <div>
-            <Header />
             <main className="container mx-auto p-4 md:p-8 flex flex-col items-center">
                 <div className="text-center max-w-2xl">
                     <h1 className="text-4xl md:text-5xl font-bold mb-4">

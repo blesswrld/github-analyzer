@@ -4,8 +4,9 @@ import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createPagesBrowserClient } from "@supabase/auth-helpers-nextjs";
 import { SessionContextProvider } from "@supabase/auth-helpers-react";
-import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "next-themes";
+import { Toaster } from "@/components/ui/sonner";
+import Header from "@/components/Header";
 
 export default function App({ Component, pageProps }: AppProps) {
     const [queryClient] = useState(() => new QueryClient());
@@ -14,7 +15,8 @@ export default function App({ Component, pageProps }: AppProps) {
     return (
         <ThemeProvider
             attribute="class"
-            defaultTheme="dark"
+            defaultTheme="system"
+            enableSystem
             disableTransitionOnChange
         >
             <SessionContextProvider
@@ -22,6 +24,9 @@ export default function App({ Component, pageProps }: AppProps) {
                 initialSession={pageProps.initialSession}
             >
                 <QueryClientProvider client={queryClient}>
+                    {/* Хедер теперь один на всё приложение */}
+                    <Header />
+                    {/* Компонент страницы будет сам решать, показывать скелетон или нет */}
                     <Component {...pageProps} />
                     <Toaster />
                 </QueryClientProvider>
