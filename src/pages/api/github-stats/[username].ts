@@ -138,8 +138,6 @@ export default async function handler(
             if (currentPageRepos.length < per_page) {
                 break;
             }
-
-            page++;
         }
 
         // Проверяем, была ли profileData успешно получена
@@ -225,6 +223,7 @@ export default async function handler(
                 followers: isUserProfile(profileData)
                     ? profileData.followers ?? 0
                     : 0,
+                type: profileData.type, // Добавляем тип ('User' или 'Organization')
             },
             languages,
             totalStars,

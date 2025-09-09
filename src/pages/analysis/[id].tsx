@@ -13,6 +13,7 @@ import TopReposCard from "@/components/analysis/TopReposCard";
 import Head from "next/head";
 import { MotionDiv } from "@/components/MotionDiv"; // Импортируем наш компонент
 import { AlertCircle } from "lucide-react"; // Иконка для примечания
+import Link from "next/link";
 
 // Определяем подробные типы для наших данных
 type ProfileInfo = {
@@ -21,6 +22,7 @@ type ProfileInfo = {
     bio: string;
     public_repos: number;
     followers: number;
+    type: string; // <-- ДОБАВЛЯЕМ ТИП
 };
 
 type MostStarredRepo = {
@@ -120,6 +122,12 @@ export default function AnalysisPage({ analysis }: AnalysisPageProps) {
         isPartial = false,
     } = analysis.stats_data;
 
+    // --- ЛОГИКА ДЛЯ ССЫЛОК ---
+    const isUser = profileInfo.type === "User";
+    const starsUrl = isUser
+        ? `https://github.com/${analysis.github_username}?tab=stars`
+        : `https://github.com/${analysis.github_username}`;
+
     // Когда данные есть, генерируем динамические теги
     const pageTitle = `Analysis for ${
         profileInfo.name || analysis.github_username
@@ -202,9 +210,15 @@ export default function AnalysisPage({ analysis }: AnalysisPageProps) {
                                     <h2 className="text-2xl font-bold break-all">
                                         {profileInfo.name}
                                     </h2>
-                                    <p className="text-muted-foreground">
-                                        @{analysis.github_username}
-                                    </p>
+                                    <Link
+                                        href={`https://github.com/${analysis.github_username}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <p className="text-muted-foreground hover:text-primary transition-colors">
+                                            @{analysis.github_username}
+                                        </p>
+                                    </Link>
                                 </div>
                             </CardHeader>
                             <CardContent>
@@ -241,6 +255,7 @@ export default function AnalysisPage({ analysis }: AnalysisPageProps) {
                                     icon={<Users size={20} />}
                                     // Передаем флаг для старта анимации
                                     startAnimation={!isLoading}
+                                    href={`https://github.com/${analysis.github_username}?tab=followers`}
                                 />
                             )}
                             <StatCard
@@ -249,6 +264,7 @@ export default function AnalysisPage({ analysis }: AnalysisPageProps) {
                                 icon={<Book size={20} />}
                                 // Передаем флаг для старта анимации
                                 startAnimation={!isLoading}
+                                href={`https://github.com/${analysis.github_username}?tab=repositories`}
                             />
                             <StatCard
                                 title="Total Stars"
@@ -256,6 +272,7 @@ export default function AnalysisPage({ analysis }: AnalysisPageProps) {
                                 icon={<Star size={20} />}
                                 // Передаем флаг для старта анимации
                                 startAnimation={!isLoading}
+                                href={starsUrl} // Используем нашу условную ссылку
                             />
                             <StatCard
                                 title="Total Forks"
@@ -263,6 +280,7 @@ export default function AnalysisPage({ analysis }: AnalysisPageProps) {
                                 icon={<GitFork size={20} />}
                                 // Передаем флаг для старта анимации
                                 startAnimation={!isLoading}
+                                href={`https://github.com/${analysis.github_username}?tab=repositories`}
                             />
                         </div>
 
