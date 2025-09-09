@@ -8,6 +8,18 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Terminal } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import { HowItWorks } from "@/components/landing/HowItWorks";
+import { Features } from "@/components/landing/Features";
+import { LiveExample } from "@/components/landing/LiveExample";
+import { FAQ } from "@/components/landing/FAQ";
 
 // Тип для ответа от нашего API
 type AnalysisResponse = {
@@ -23,6 +35,9 @@ export default function HomePage() {
     // Инициализируем username пустым, чтобы избежать мигания
     const [username, setUsername] = useState("");
     const router = useRouter();
+
+    // --- СОСТОЯНИЕ ДЛЯ УПРАВЛЕНИЯ ТАБАМИ ---
+    const [activeTab, setActiveTab] = useState("how-it-works");
 
     // useEffect для установки username после загрузки сессии
     useEffect(() => {
@@ -85,9 +100,9 @@ export default function HomePage() {
 
     // Когда загрузка сессии завершена, показываем основной контент
     return (
-        <main className="container mx-auto p-4 md:p-8 flex flex-col items-center">
+        <main className="container mx-auto p-6 md:p-8 flex flex-col items-center">
             <div className="text-center max-w-2xl">
-                <h1 className="text-4xl md:text-5xl font-bold mb-4">
+                <h1 className="text-3xl md:text-4xl font-bold mb-4">
                     GitHub Profile Analyzer
                 </h1>
                 <p className="text-lg text-muted-foreground mb-8">
@@ -130,6 +145,59 @@ export default function HomePage() {
                     </AlertDescription>
                 </Alert>
             )}
+
+            <div className="w-full max-w-4xl mt-12 md:mt-16">
+                {/* Мы используем value и onValueChange, чтобы контролировать состояние */}
+                <Tabs
+                    value={activeTab}
+                    onValueChange={setActiveTab}
+                    className="w-full"
+                >
+                    {/* --- ВЕРСИЯ ДЛЯ ДЕСКТОПОВ (прячется на мобильных) --- */}
+                    <TabsList className="hidden md:grid w-full grid-cols-4">
+                        <TabsTrigger value="how-it-works">
+                            How It Works
+                        </TabsTrigger>
+                        <TabsTrigger value="features">Features</TabsTrigger>
+                        <TabsTrigger value="example">Live Example</TabsTrigger>
+                        <TabsTrigger value="faq">FAQ</TabsTrigger>
+                    </TabsList>
+
+                    {/* --- ВЕРСИЯ ДЛЯ МОБИЛЬНЫХ (прячется на десктопах) --- */}
+                    <div className="block md:hidden">
+                        <Select value={activeTab} onValueChange={setActiveTab}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Select a section..." />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="how-it-works">
+                                    How It Works
+                                </SelectItem>
+                                <SelectItem value="features">
+                                    Features
+                                </SelectItem>
+                                <SelectItem value="example">
+                                    Live Example
+                                </SelectItem>
+                                <SelectItem value="faq">FAQ</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+
+                    <TabsContent value="how-it-works" className="mt-6">
+                        <HowItWorks />
+                    </TabsContent>
+                    <TabsContent value="features" className="mt-6">
+                        <Features />
+                    </TabsContent>
+                    <TabsContent value="example" className="mt-6">
+                        <LiveExample />
+                    </TabsContent>
+                    <TabsContent value="faq" className="mt-6">
+                        <FAQ />
+                    </TabsContent>
+                </Tabs>
+            </div>
         </main>
     );
 }

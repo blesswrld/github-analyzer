@@ -7,6 +7,8 @@ import { SessionContextProvider } from "@supabase/auth-helpers-react";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/sonner";
 import Header from "@/components/Header";
+// Импортируем компонент футера
+import Footer from "@/components/Footer";
 
 export default function App({ Component, pageProps }: AppProps) {
     const [queryClient] = useState(() => new QueryClient());
@@ -24,10 +26,15 @@ export default function App({ Component, pageProps }: AppProps) {
                 initialSession={pageProps.initialSession}
             >
                 <QueryClientProvider client={queryClient}>
-                    {/* Хедер теперь один на всё приложение */}
-                    <Header />
-                    {/* Компонент страницы будет сам решать, показывать скелетон или нет */}
-                    <Component {...pageProps} />
+                    <div className="flex flex-col min-h-screen">
+                        {/* Хедер один на всё приложение */}
+                        <Header />
+                        <main className="flex-grow">
+                            {/* Компонент страницы будет сам решать, показывать скелетон или нет */}
+                            <Component {...pageProps} />
+                        </main>
+                        <Footer />
+                    </div>
                     <Toaster />
                 </QueryClientProvider>
             </SessionContextProvider>

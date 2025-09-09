@@ -55,7 +55,7 @@ export default function Header() {
         <header className="container mx-auto flex justify-between items-center p-4 border-b">
             {/* Показываем заголовок-ссылку только если мы НЕ на главной странице. */}
             {!isHomePage ? (
-                <Link href="/" className="text-xl md:text-2xl font-bold">
+                <Link href="/" className="text-xl md:text-1xl font-bold">
                     GitHub Analyzer
                 </Link>
             ) : (

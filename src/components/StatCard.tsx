@@ -23,7 +23,7 @@ export default function StatCard({
                 </CardTitle>
             </CardHeader>
             <CardContent>
-                <div className="text-2xl font-bold flex items-center gap-2">
+                <div className="text-1xl xl:text-2xl font-bold flex items-center gap-2">
                     {icon}
                     <CountUp
                         start={0} // Начинаем с нуля

@@ -101,7 +101,7 @@ export default function AnalysisPage({ analysis }: AnalysisPageProps) {
         <main className="container mx-auto p-4 md:p-8">
             {/* Выносим заголовок и кнопку Share наверх для лучшей структуры */}
             <div className="flex justify-between items-center mb-6">
-                <h1 className="text-3xl md:text-4xl font-bold">
+                <h1 className="text-2xl md:text-4xl font-bold">
                     Analysis for{" "}
                     <span className="text-primary">
                         {analysis.github_username}
@@ -190,7 +190,7 @@ export default function AnalysisPage({ analysis }: AnalysisPageProps) {
                         <CardHeader>
                             <CardTitle>Top Languages by Repository</CardTitle>
                         </CardHeader>
-                        <CardContent>
+                        <CardContent className="px-0 sm:px-2 md:px-6">
                             {languages && languages.length > 0 ? (
                                 <LanguagesChart data={languages} />
                             ) : (
