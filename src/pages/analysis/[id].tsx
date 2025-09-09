@@ -1,18 +1,15 @@
 import { GetServerSidePropsContext } from "next";
 import { useEffect, useState } from "react";
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
-
-// Компоненты UI и иконки
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import StatCard from "@/components/StatCard";
 import { Star, GitFork, Users, Book, Share2 } from "lucide-react";
-
-// Наши кастомные компоненты и утилиты
 import AnalysisSkeleton from "@/components/AnalysisSkeleton";
 import LanguagesChart from "@/components/charts/LanguagesChart";
-import Link from "next/link";
 import { toast } from "sonner";
+import TopReposCard from "@/components/TopReposCard";
 
 // Определяем подробные типы для наших данных
 type ProfileInfo = {
@@ -31,6 +28,15 @@ type MostStarredRepo = {
 
 type LanguageData = { id: string; label: string; value: number };
 
+// Обновляем наши типы, чтобы они включали topRepos
+type RepoData = {
+    name: string;
+    url: string;
+    stars: number;
+    description: string;
+    language: string;
+};
+
 type AnalysisData = {
     github_username: string;
     stats_data: {
@@ -39,6 +45,7 @@ type AnalysisData = {
         totalStars: number;
         totalForks: number;
         mostStarredRepo: MostStarredRepo;
+        topRepos: RepoData[]; // <-- ДОБАВЛЯЕМ ТИП
     };
 };
 
@@ -85,8 +92,8 @@ export default function AnalysisPage({ analysis }: AnalysisPageProps) {
         );
     }
 
-    // Деструктурируем данные для удобства
-    const { profileInfo, totalStars, totalForks, mostStarredRepo, languages } =
+    // Деструктурируем новые данные
+    const { profileInfo, totalStars, totalForks, languages, topRepos } =
         analysis.stats_data;
 
     // Когда загрузка завершена и данные есть, рендерим основной контент
@@ -106,7 +113,7 @@ export default function AnalysisPage({ analysis }: AnalysisPageProps) {
                 </Button>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:items-start">
                 {/* Левая колонка: Профиль и ключевые метрики */}
                 <div className="lg:col-span-1 space-y-6">
                     <Card>
@@ -140,84 +147,45 @@ export default function AnalysisPage({ analysis }: AnalysisPageProps) {
                     <div className="grid grid-cols-2 gap-4">
                         {/* Показываем карточку Followers только если их больше 0 (у организаций их нет) */}
                         {profileInfo.followers > 0 && (
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle className="text-sm">
-                                        Followers
-                                    </CardTitle>
-                                </CardHeader>
-                                <CardContent>
-                                    <p className="text-2xl font-bold flex items-center gap-2">
-                                        <Users size={20} />
-                                        {profileInfo.followers.toLocaleString()}
-                                    </p>
-                                </CardContent>
-                            </Card>
+                            <StatCard
+                                title="Followers"
+                                value={profileInfo.followers}
+                                icon={<Users size={20} />}
+                                // Передаем флаг для старта анимации
+                                startAnimation={!isLoading}
+                            />
                         )}
-                        <Card>
-                            <CardHeader>
-                                <CardTitle className="text-sm">
-                                    Repositories
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <p className="text-2xl font-bold flex items-center gap-2">
-                                    <Book size={20} />
-                                    {profileInfo.public_repos.toLocaleString()}
-                                </p>
-                            </CardContent>
-                        </Card>
-                        <Card>
-                            <CardHeader>
-                                <CardTitle className="text-sm">
-                                    Total Stars
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <p className="text-2xl font-bold flex items-center gap-2">
-                                    <Star size={20} />
-                                    {totalStars.toLocaleString()}
-                                </p>
-                            </CardContent>
-                        </Card>
-                        <Card>
-                            <CardHeader>
-                                <CardTitle className="text-sm">
-                                    Total Forks
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <p className="text-2xl font-bold flex items-center gap-2">
-                                    <GitFork size={20} />
-                                    {totalForks.toLocaleString()}
-                                </p>
-                            </CardContent>
-                        </Card>
+                        <StatCard
+                            title="Repositories"
+                            value={profileInfo.public_repos}
+                            icon={<Book size={20} />}
+                            // Передаем флаг для старта анимации
+                            startAnimation={!isLoading}
+                        />
+                        <StatCard
+                            title="Total Stars"
+                            value={totalStars}
+                            icon={<Star size={20} />}
+                            // Передаем флаг для старта анимации
+                            startAnimation={!isLoading}
+                        />
+                        <StatCard
+                            title="Total Forks"
+                            value={totalForks}
+                            icon={<GitFork size={20} />}
+                            // Передаем флаг для старта анимации
+                            startAnimation={!isLoading}
+                        />
                     </div>
 
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Most Starred Repository</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <Link
-                                href={mostStarredRepo.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="font-semibold text-primary hover:underline break-all"
-                            >
-                                {mostStarredRepo.name}
-                            </Link>
-                            <p className="text-muted-foreground flex items-center gap-1 mt-1">
-                                <Star size={16} />{" "}
-                                {mostStarredRepo.stars.toLocaleString()} stars
-                            </p>
-                        </CardContent>
-                    </Card>
+                    {/* ДОБАВЛЯЕМ КАРТОЧКУ С ТОП-5 РЕПОЗИТОРИЯМИ */}
+                    {topRepos && topRepos.length > 0 && (
+                        <TopReposCard repos={topRepos} />
+                    )}
                 </div>
 
                 {/* Правая колонка: График языков */}
-                <div className="lg:col-span-2">
+                <div className="lg:col-span-2 lg:sticky lg:top-8">
                     <Card className="h-full">
                         <CardHeader>
                             <CardTitle>Top Languages by Repository</CardTitle>

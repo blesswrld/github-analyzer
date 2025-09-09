@@ -99,6 +99,21 @@ export default async function handler(
             }
         }
 
+        // Находим топ-5 репозиториев по количеству звезд
+        const topRepos = [...reposData] // Создаем копию, чтобы не изменять исходный массив
+            .sort(
+                (a, b) => (b.stargazers_count ?? 0) - (a.stargazers_count ?? 0)
+            ) // Сортируем по звездам (убывание)
+            .slice(0, 5) // Берем первые 5
+            .map((repo) => ({
+                // Выбираем только нужные поля, чтобы не хранить лишнего
+                name: repo.full_name ?? "Unknown Repo",
+                url: repo.html_url ?? "#",
+                stars: repo.stargazers_count ?? 0,
+                description: repo.description ?? "No description.",
+                language: repo.language ?? "N/A",
+            }));
+
         const languages = Object.entries(languageStats)
             .map(([name, count]) => ({ id: name, label: name, value: count }))
             .sort((a, b) => b.value - a.value);
@@ -116,6 +131,7 @@ export default async function handler(
             totalStars,
             totalForks,
             mostStarredRepo,
+            topRepos, // <-- ДОБАВЛЯЕМ НАШ МАССИВ ТОП 5 РЕПО
         };
 
         const { data: analysisResult, error: insertError } = await supabase
