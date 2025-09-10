@@ -5,11 +5,15 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createPagesBrowserClient } from "@supabase/auth-helpers-nextjs";
-import { SessionContextProvider } from "@supabase/auth-helpers-react";
+import {
+    SessionContextProvider,
+    useSessionContext,
+} from "@supabase/auth-helpers-react";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/sonner";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import FooterSkeleton from "@/components/skeletons/FooterSkeleton";
 import AnalysisSkeleton from "@/components/skeletons/AnalysisSkeleton";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
@@ -22,6 +26,9 @@ function AppLayout({ children }: { children: React.ReactNode }) {
 
     // Получаем состояние глобальной загрузки из нашего нового контекста
     const { isGlobalLoading } = useLoading();
+
+    // --- Получаем состояние загрузки сессии ---
+    const { isLoading: isSessionLoading } = useSessionContext();
 
     useEffect(() => {
         const handleStart = (url: string) => {
@@ -58,8 +65,14 @@ function AppLayout({ children }: { children: React.ReactNode }) {
                     children
                 )}
             </main>
-            {/* Показываем футер, только если НЕТ глобальной загрузки (которую мы контролируем из HomePage) */}
-            {!isGlobalLoading && <Footer />}
+
+            {/* --- Условный рендеринг футера --- */}
+            {isSessionLoading ? (
+                <FooterSkeleton />
+            ) : (
+                // Показываем реальный футер, только если нет глобальной загрузки
+                !isGlobalLoading && <Footer />
+            )}
         </div>
     );
 }
