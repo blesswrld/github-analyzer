@@ -77,7 +77,7 @@ export default function DashboardPage({
 
                 {/* --- ПРИМЕЧАНИЕ (показывается, если список не пуст) --- */}
                 {analyses.length > 0 && (
-                    <p className="text-sm text-muted-foreground mt-2">
+                    <p className="text-sm text-muted-foreground mb-2">
                         Showing up to the last 100 analyses.
                     </p>
                 )}
