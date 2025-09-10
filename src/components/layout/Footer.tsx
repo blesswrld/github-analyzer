@@ -7,7 +7,7 @@ export default function Footer() {
                 <p className="text-muted-foreground text-sm text-center md:text-left">
                     Built by{" "}
                     <Link
-                        href="https://github.com/blesswrld"
+                        href="https://github.com/blesswrld/github-analyzer"
                         target="_blank"
                         className="font-semibold text-primary hover:underline"
                     >
