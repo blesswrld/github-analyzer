@@ -37,7 +37,7 @@ export default function ContributionCalendar({
                         typeof value.count === "number" ? value.count : 0;
                     return `color-github-${Math.min(count, 4)}`;
                 }}
-                // @ts-ignore
+                // @ts-expect-error - Игнорируем ошибку, так как типы @types/react-calendar-heatmap сломаны
                 tooltipDataAttrs={(
                     value: ReactCalendarHeatmapValue<string>
                 ) => {
