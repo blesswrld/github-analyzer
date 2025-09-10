@@ -19,6 +19,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Header() {
     const supabaseClient = useSupabaseClient();
+
     // Получаем состояние загрузки и саму сессию
     const { isLoading, session } = useSessionContext();
     const user = session?.user;
@@ -28,11 +29,28 @@ export default function Header() {
     const isHomePage = router.pathname === "/";
 
     const handleLogin = async () => {
-        await supabaseClient.auth.signInWithOAuth({ provider: "github" });
+        await supabaseClient.auth.signInWithOAuth({
+            provider: "github",
+            options: {
+                // Мы явно указываем, куда вернуть пользователя после логина.
+                // window.location.origin вернет http://localhost:3000 на локалке
+                // и https://github-analyzer-self.vercel.app на проде.
+                redirectTo: `${window.location.origin}/api/auth/callback`,
+            },
+        });
     };
 
     const handleLogout = async () => {
-        await supabaseClient.auth.signOut();
+        const { error } = await supabaseClient.auth.signOut();
+
+        if (error) {
+            console.error("Error signing out:", error);
+        }
+
+        // Вместо router.push, мы просим роутер перезагрузить
+        // текущее состояние. auth-helpers перехватит это
+        // и правильно почистит сессию перед редиректом.
+        router.reload();
     };
 
     // Скелетон для состояния загрузки
