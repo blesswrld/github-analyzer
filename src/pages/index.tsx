@@ -145,7 +145,7 @@ export default function HomePage() {
     // Когда загрузка сессии завершена, показываем основной контент
     return (
         <>
-            <main className="container mx-auto p-6 md:p-8 flex flex-col items-center">
+            <main className="container mx-auto mb-12 p-6 md:mb-6 md:p-8 flex flex-col items-center">
                 <div className="text-center max-w-2xl">
                     <h1 className="text-3xl md:text-4xl font-bold mb-4">
                         GitHub Profile Analyzer
