@@ -55,7 +55,7 @@ export function FAQ() {
                     {/* --- ВНУТРЕННИЙ АККОРДЕОН-ЭЛЕМЕНТ --- */}
                     <AccordionItem
                         value={item.value}
-                        className="border-none bg-card rounded-[11px]"
+                        className="border-none bg-muted rounded-[11px]"
                     >
                         <AccordionTrigger className="p-4 hover:no-underline cursor-pointer">
                             {item.question}
