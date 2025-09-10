@@ -133,3 +133,50 @@ body {
         @apply bg-background text-foreground;
     }
 }
+
+.react-calendar-heatmap .color-empty {
+    fill: hsl(var(--muted));
+}
+.react-calendar-heatmap .color-github-0 {
+    fill: hsl(var(--muted));
+}
+.react-calendar-heatmap .color-github-1 {
+    fill: #0e4429;
+}
+.react-calendar-heatmap .color-github-2 {
+    fill: #006d32;
+}
+.react-calendar-heatmap .color-github-3 {
+    fill: #26a641;
+}
+.react-calendar-heatmap .color-github-4 {
+    fill: #39d353;
+}
+
+.dark .react-calendar-heatmap .color-github-1 {
+    fill: #0e4429;
+}
+.dark .react-calendar-heatmap .color-github-2 {
+    fill: #006d32;
+}
+.dark .react-calendar-heatmap .color-github-3 {
+    fill: #26a641;
+}
+.dark .react-calendar-heatmap .color-github-4 {
+    fill: #39d353;
+}
+
+.react-calendar-heatmap-container {
+    font-size: 10px;
+}
+.react-calendar-heatmap-container svg {
+    width: 100%;
+    height: auto;
+}
+.react-calendar-heatmap text {
+    fill: hsl(var(--muted-foreground));
+}
+.react-calendar-heatmap rect:hover {
+    stroke: hsl(var(--foreground));
+    stroke-width: 2px;
+}

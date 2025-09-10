@@ -14,6 +14,11 @@ import Head from "next/head";
 import { MotionDiv } from "@/components/ui/MotionDiv"; // Импортируем наш компонент
 import { AlertCircle } from "lucide-react"; // Иконка для примечания
 import Link from "next/link";
+import { useQuery } from "@tanstack/react-query"; // Добавляем useQuery
+import ContributionCalendar from "@/components/analysis/ContributionCalendar";
+import { BarChart } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import ContributionStats from "@/components/analysis/ContributionStats";
 
 // Определяем подробные типы для наших данных
 type ProfileInfo = {
@@ -62,6 +67,22 @@ type AnalysisPageProps = {
 export default function AnalysisPage({ analysis }: AnalysisPageProps) {
     // Состояние для отслеживания загрузки на клиенте
     const [isLoading, setIsLoading] = useState(true);
+
+    // --- ЛОГИКА ДЛЯ ЗАГРУЗКИ ДАННЫХ О КОММИТАХ ---
+    const [showContributions, setShowContributions] = useState(false);
+
+    const { data: contributionData, isLoading: isLoadingContributions } =
+        useQuery({
+            //  Используем optional chaining (?.) для безопасного доступа
+            queryKey: ["contributions", analysis?.github_username],
+            queryFn: () =>
+                // Выполняем fetch только если analysis существует
+                fetch(`/api/contributions/${analysis!.github_username}`).then(
+                    (res) => res.json()
+                ),
+            // Добавляем проверку на 'analysis' в enabled
+            enabled: showContributions && !!analysis, // Запрос выполнится только если showContributions=true И analysis существует
+        });
 
     useEffect(() => {
         // Как только компонент монтируется на клиенте, мы считаем, что загрузка завершена.
@@ -303,20 +324,71 @@ export default function AnalysisPage({ analysis }: AnalysisPageProps) {
                         }}
                     >
                         <Card className="h-full">
-                            <CardHeader>
-                                <CardTitle>
-                                    Top Languages by Repository
+                            <CardHeader className="flex flex-row justify-between items-center">
+                                <CardTitle className="break-all">
+                                    {showContributions
+                                        ? "Contribution Activity"
+                                        : "Top Languages by Repository"}
                                 </CardTitle>
+
+                                {isUser && (
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() =>
+                                            setShowContributions(
+                                                !showContributions
+                                            )
+                                        } // Переключение
+                                    >
+                                        <BarChart className="mr-2 h-4 w-4" />
+                                        {showContributions
+                                            ? "Back to Languages"
+                                            : "View Contribution Insights"}
+                                    </Button>
+                                )}
                             </CardHeader>
+
                             <CardContent className="px-0 sm:px-2 md:px-6">
-                                {topLanguages && topLanguages.length > 0 ? (
-                                    // Передаем в график ОБРЕЗАННЫЙ массив
-                                    <LanguagesChart data={topLanguages} />
+                                {showContributions && isUser ? (
+                                    // Рендерим блок контрибьюций
+                                    <>
+                                        {isLoadingContributions ? (
+                                            <Skeleton className="h-[250px] w-full" />
+                                        ) : contributionData?.contributions ? (
+                                            <div className="space-y-4">
+                                                <ContributionCalendar
+                                                    data={
+                                                        contributionData.contributions
+                                                    }
+                                                />
+                                                <ContributionStats
+                                                    stats={
+                                                        contributionData.stats
+                                                    }
+                                                />
+                                            </div>
+                                        ) : (
+                                            <p>
+                                                Could not load contribution data
+                                                for this user.
+                                            </p>
+                                        )}
+                                    </>
                                 ) : (
-                                    <p>
-                                        No public repositories with language
-                                        data found.
-                                    </p>
+                                    // Рендерим блок языков
+                                    <>
+                                        {languages && languages.length > 0 ? (
+                                            <LanguagesChart
+                                                data={topLanguages}
+                                            />
+                                        ) : (
+                                            <p>
+                                                No public repositories with
+                                                language data found.
+                                            </p>
+                                        )}
+                                    </>
                                 )}
                             </CardContent>
                         </Card>

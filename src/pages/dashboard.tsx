@@ -19,6 +19,7 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from "@/components/ui/pagination";
+import Image from "next/image";
 
 // Тип для одного анализа из истории
 type AnalysisHistoryItem = {
@@ -107,6 +108,13 @@ export default function DashboardPage({
                     </div>
                 ) : (
                     <div className="text-center border-2 border-dashed rounded-lg p-12">
+                        <Image
+                            src="/illustrations/undraw_no-data.svg"
+                            alt="No analyses found"
+                            width={200}
+                            height={200}
+                            className="mx-auto mb-4"
+                        />
                         <h2 className="text-xl font-semibold">
                             No analyses yet
                         </h2>
