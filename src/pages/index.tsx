@@ -33,6 +33,8 @@ type AnalysisResponse = {
 export default function HomePage() {
     // Получаем состояние загрузки сессии
     const { isLoading: isSessionLoading, session } = useSessionContext();
+    const { isGlobalLoading } = useLoading();
+
     const user = session?.user;
 
     // Инициализируем username пустым, чтобы избежать мигания
@@ -150,10 +152,13 @@ export default function HomePage() {
                     <h1 className="text-3xl md:text-4xl font-bold mb-4">
                         GitHub Profile Analyzer
                     </h1>
-                    <p className="text-lg text-muted-foreground mb-8">
-                        Enter a GitHub username to generate a shareable
-                        dashboard of their coding stats and top projects.
-                    </p>
+                    {/* Показываем подзаголовок, только если НЕТ глобальной загрузки */}
+                    {!isGlobalLoading && (
+                        <p className="text-lg text-muted-foreground mb-8">
+                            Enter a GitHub username to generate a shareable
+                            dashboard of their coding stats and top projects.
+                        </p>
+                    )}
                 </div>
 
                 <form

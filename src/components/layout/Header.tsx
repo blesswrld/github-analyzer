@@ -16,12 +16,16 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useLoading } from "@/context/LoadingContext"; // Импортируем наш хук
+import { cn } from "@/lib/utils";
 
 export default function Header() {
     const supabaseClient = useSupabaseClient();
 
     // Получаем состояние загрузки и саму сессию
     const { isLoading, session } = useSessionContext();
+    const { isGlobalLoading } = useLoading(); // Получаем флаг
+
     const user = session?.user;
 
     // Получаем текущий путь страницы
@@ -70,7 +74,13 @@ export default function Header() {
 
     // Когда проверка завершена, показываем реальный хедер
     return (
-        <header className="container mx-auto flex justify-between items-center p-4 border-b">
+        <header
+            className={cn(
+                "container mx-auto flex justify-between items-center p-4 border-b transition-opacity",
+                // Если идет загрузка, делаем хедер полупрозрачным и некликабельным
+                isGlobalLoading && "opacity-50 pointer-events-none"
+            )}
+        >
             {/* Показываем заголовок-ссылку только если мы НЕ на главной странице. */}
             {!isHomePage ? (
                 <Link href="/" className="text-xl md:text-1xl font-bold">
