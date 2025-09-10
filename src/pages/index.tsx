@@ -163,7 +163,7 @@ export default function HomePage() {
                     {/* Используем isPending */}
                     <Input
                         type="text"
-                        placeholder="e.g., facebook"
+                        placeholder="Enter a GitHub username or organization"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         disabled={isPending}

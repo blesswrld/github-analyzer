@@ -94,6 +94,12 @@ export default function Header() {
                             </DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
+                                asChild
+                                className="cursor-pointer"
+                            >
+                                <Link href="/dashboard">My Analyses</Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
                                 onClick={handleLogout}
                                 className="cursor-pointer"
                             >

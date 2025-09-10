@@ -1,0 +1,31 @@
+export const languageColors: Record<string, string> = {
+    JavaScript: "#f1e05a",
+    TypeScript: "#3178c6",
+    Python: "#3572A5",
+    Java: "#b07219",
+    "C++": "#f34b7d",
+    "C#": "#178600",
+    Go: "#00ADD8",
+    Rust: "#dea584",
+    PHP: "#4F5D95",
+    Ruby: "#701516",
+    Swift: "#F05138",
+    Kotlin: "#A97BFF",
+    HTML: "#e34c26",
+    CSS: "#563d7c",
+    Shell: "#89e051",
+    Dart: "#00B4AB",
+    Vue: "#41b883",
+    "Jupyter Notebook": "#DA5B0B",
+    C: "#555555",
+    "Objective-C": "#438eff",
+    SCSS: "#c6538c",
+    R: "#198CE7",
+    Makefile: "#427819",
+    PowerShell: "#012456",
+    Haskell: "#5e5086",
+    Lua: "#000080",
+    // другие языки по мере необходимости
+};
+
+export const defaultColor = "#6e7681";
