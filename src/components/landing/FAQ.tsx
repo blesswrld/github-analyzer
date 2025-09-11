@@ -49,7 +49,7 @@ export function FAQ() {
                         // Если элемент открыт, делаем рамку яркой, иначе - полупрозрачной
                         openItem === item.value
                             ? "lg:opacity-100"
-                            : "lg:opacity-50 lg:hover:opacity-100"
+                            : "lg:opacity-70 lg:hover:opacity-100"
                     )}
                 >
                     {/* --- ВНУТРЕННИЙ АККОРДЕОН-ЭЛЕМЕНТ --- */}
