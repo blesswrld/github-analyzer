@@ -38,7 +38,6 @@ type MostStarredRepo = {
 
 type LanguageData = { id: string; label: string; value: number };
 
-// Обновляем наши типы, чтобы они включали topRepos
 type RepoData = {
     name: string;
     url: string;

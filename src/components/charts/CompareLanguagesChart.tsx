@@ -1,6 +1,6 @@
 "use client";
 
-import { ResponsiveBar, BarDatum, BarTooltipProps } from "@nivo/bar";
+import { ResponsiveBar, BarDatum } from "@nivo/bar";
 import { useTheme } from "next-themes";
 import { useWindowWidth } from "@react-hook/window-size";
 
@@ -34,7 +34,6 @@ export default function CompareLanguagesChart({
     const windowWidth = useWindowWidth();
     const isMobile = windowWidth < 768;
 
-    // --- ТРАНСФОРМАЦИЯ ДАННЫХ ---
     // 1. Собираем все уникальные языки от обоих пользователей/организаций
     const allLangs = new Set([
         ...data1.map((d) => d.label),

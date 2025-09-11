@@ -256,7 +256,7 @@ export default function HomePage() {
 
             {/* Показываем скелетон на месте табов, если идет загрузка */}
             {isLoading && (
-                <div className="w-full max-w-4xl mt-16">
+                <div className="w-full max-w-4xl mt-12">
                     <Skeleton className="h-10 w-full mb-6" />
                     <Skeleton className="h-40 w-full" />
                 </div>
@@ -274,7 +274,7 @@ export default function HomePage() {
 
             {/* Показываем табы, только если НЕТ загрузки */}
             {!isLoading && (
-                <div className="w-full max-w-4xl mt-16">
+                <div className="w-full max-w-4xl mt-12">
                     <Tabs
                         value={activeTab}
                         onValueChange={handleTabChange}

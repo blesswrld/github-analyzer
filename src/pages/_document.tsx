@@ -10,8 +10,6 @@ export default function Document() {
             />
 
             <Head>
-                {/* --- ФАВИКОНКИ И МЕТА-ТЕГИ --- */}
-
                 {/* Манифест - главный источник информации об иконках */}
                 <link rel="manifest" href="/favicon/manifest.json" />
 

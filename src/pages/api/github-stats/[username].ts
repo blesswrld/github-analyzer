@@ -1,12 +1,11 @@
 import { Octokit } from "@octokit/core";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
-// ИМПОРТИРУЕМ ТИПЫ ИЗ OCTOKIT ДЛЯ ЗАМЕНЫ 'ANY'
 import type { GetResponseTypeFromEndpointMethod } from "@octokit/types";
 
-// Мы используем ее только для вывода типов, что является валидным сценарием.
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const octokitForTypes = new Octokit();
+
 type UserProfileResponse = GetResponseTypeFromEndpointMethod<
     typeof octokitForTypes.request<"GET /users/{username}">
 >;

@@ -8,9 +8,9 @@ import {
     Keyboard,
     BarChart3,
     Share2,
-    /* MousePointerClick,
+    MousePointerClick,
     Laptop,
-    Users, */
+    Users,
 } from "lucide-react";
 
 const steps = [
@@ -31,7 +31,7 @@ const steps = [
         description:
             "Get a unique, shareable link to your analysis to showcase your work.",
     },
-    /* {
+    {
         icon: <Laptop className="h-6 w-6 text-primary" />,
         title: "4. Fully Responsive",
         description:
@@ -48,7 +48,7 @@ const steps = [
         title: "6. Compare Profiles",
         description:
             "Analyze two profiles side-by-side to compare their statistics and programming language preferences.",
-    }, */
+    },
 ];
 
 export function HowItWorks() {

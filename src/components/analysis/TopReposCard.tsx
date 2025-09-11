@@ -1,7 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Star } from "lucide-react";
 import Link from "next/link";
-// --- ИМПОРТИРУЕМ НАШИ ЦВЕТА ---
 import { languageColors, defaultColor } from "@/data/languageColors";
 
 // Определяем тип для одного репозитория

@@ -21,7 +21,7 @@ export default function HomepageSkeleton() {
             </div>
 
             {/* --- Скелетон для Табов --- */}
-            <div className="w-full max-w-4xl mt-16">
+            <div className="w-full max-w-4xl mt-12">
                 <Tabs defaultValue="how-it-works">
                     {/* Скелетон для переключателей табов */}
                     <TabsList className="grid w-full grid-cols-2 md:grid-cols-4">

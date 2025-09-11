@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { ZoomIn } from "lucide-react";
 import Link from "next/link";
-import { LiveExampleSkeleton } from "../skeletons/landing/LiveExampleSkeleton"; // Импортируем наш скелетон
+import { LiveExampleSkeleton } from "../skeletons/landing/LiveExampleSkeleton";
 
 // Добавляем проп isLoading
 interface LiveExampleProps {

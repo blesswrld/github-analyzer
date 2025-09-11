@@ -3,7 +3,7 @@ import Head from "next/head";
 import type { AnalysisData } from "@/types";
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
 import ProfileColumn from "@/components/analysis/ProfileColumn";
-import CompareLanguagesChart from "@/components/charts/CompareLanguagesChart"; // Убедитесь, что этот компонент импортирован
+import CompareLanguagesChart from "@/components/charts/CompareLanguagesChart";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 // Определяем пропсы для страницы сравнения

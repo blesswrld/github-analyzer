@@ -7,7 +7,7 @@ import {
     AccordionItem,
     AccordionTrigger,
 } from "@/components/ui/accordion";
-import { cn } from "@/lib/utils"; // Импортируем нашу утилиту cn
+import { cn } from "@/lib/utils";
 
 // Создаем массив с данными для FAQ для чистоты кода
 const faqItems = [

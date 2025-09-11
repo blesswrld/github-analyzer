@@ -156,7 +156,6 @@ export default function LanguagesChart({ data }: LanguagesChartProps) {
                 labelSkipWidth={12}
                 labelSkipHeight={12}
                 labelTextColor={{ from: "color", modifiers: [["darker", 1.6]] }}
-                // Остальные пропсы
                 animate={true}
                 role="application"
                 ariaLabel="Bar chart showing top languages by repository count"
