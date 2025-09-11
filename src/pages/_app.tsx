@@ -22,23 +22,26 @@ import { LoadingProvider, useLoading } from "@/context/LoadingContext";
 // --- Внутренний компонент-обертка для layout, чтобы иметь доступ ко всем контекстам ---
 function AppLayout({ children }: { children: React.ReactNode }) {
     const router = useRouter();
-    const [isPageLoading, setIsPageLoading] = useState(false);
+    // Состояние для скелетона страницы анализа при ПЕРЕХОДЕ
+    const [isPageTransitioning, setIsPageTransitioning] = useState(false);
 
     // Получаем состояние глобальной загрузки из нашего нового контекста
-    const { isGlobalLoading } = useLoading();
+    const { isGlobalLoading, setIsGlobalLoading } = useLoading(); // Получаем и функцию
 
     // --- Получаем состояние загрузки сессии ---
     const { isLoading: isSessionLoading } = useSessionContext();
 
     useEffect(() => {
         const handleStart = (url: string) => {
-            // Показываем скелетон только при переходе на страницу анализа
+            // Включаем скелетон для анализа
             if (url.startsWith("/analysis/")) {
-                setIsPageLoading(true);
+                setIsPageTransitioning(true);
             }
         };
         const handleComplete = () => {
-            setIsPageLoading(false);
+            // Выключаем ОБА флага загрузки при завершении любого перехода
+            setIsPageTransitioning(false);
+            setIsGlobalLoading(false);
         };
 
         router.events.on("routeChangeStart", handleStart);
@@ -50,14 +53,14 @@ function AppLayout({ children }: { children: React.ReactNode }) {
             router.events.off("routeChangeComplete", handleComplete);
             router.events.off("routeChangeError", handleComplete);
         };
-    }, [router]);
+    }, [router, setIsGlobalLoading]);
 
     return (
         <div className="flex flex-col min-h-screen">
             {/* Хедер один на всё приложение */}
             <Header />
             <main className="flex-grow">
-                {isPageLoading ? (
+                {isPageTransitioning ? (
                     <AnalysisSkeleton />
                 ) : (
                     // Компонент страницы (переданный как children) будет сам решать,

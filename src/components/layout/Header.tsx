@@ -4,7 +4,7 @@ import {
 } from "@supabase/auth-helpers-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { useRouter } from "next/router"; // Импортируем useRouter
+import { useRouter } from "next/router";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -16,7 +16,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useLoading } from "@/context/LoadingContext"; // Импортируем наш хук
+import { useLoading } from "@/context/LoadingContext";
 import { cn } from "@/lib/utils";
 
 export default function Header() {
@@ -57,6 +57,9 @@ export default function Header() {
         router.reload();
     };
 
+    // Объединяем оба состояния загрузки в одно
+    const showSkeleton = isLoading || isGlobalLoading;
+
     // Скелетон для состояния загрузки
     if (isLoading) {
         return (
@@ -78,12 +81,12 @@ export default function Header() {
             className={cn(
                 "container mx-auto flex justify-between items-center p-4 border-b transition-opacity",
                 // Если идет загрузка, делаем хедер полупрозрачным и некликабельным
-                isGlobalLoading && "opacity-50 pointer-events-none"
+                showSkeleton && "opacity-50 pointer-events-none"
             )}
         >
             {/* Показываем заголовок-ссылку только если мы НЕ на главной странице. */}
             {!isHomePage ? (
-                <Link href="/" className="text-xl md:text-1xl font-bold">
+                <Link href="/" className="text-xl md:text-2xl font-bold">
                     GitHub Analyzer
                 </Link>
             ) : (
