@@ -232,13 +232,16 @@ export default function HomePage() {
             {/* --- КНОПКИ УПРАВЛЕНИЯ (показываются, если нет загрузки) --- */}
             {!isLoading && (
                 <div className="flex gap-4 mb-8">
-                    <Button
-                        variant="ghost"
-                        onClick={handleSurpriseMe}
-                        disabled={isLoading}
-                    >
-                        <Dices className="mr-2 h-4 w-4" /> Surprise Me!
-                    </Button>
+                    {/* Показываем "Surprise Me!" только если НЕ в режиме сравнения */}
+                    {!isCompareMode && (
+                        <Button
+                            variant="ghost"
+                            onClick={handleSurpriseMe}
+                            disabled={isLoading}
+                        >
+                            <Dices className="mr-2 h-4 w-4" /> Surprise Me!
+                        </Button>
+                    )}
                     <Button
                         variant="ghost"
                         onClick={() => setIsCompareMode(!isCompareMode)}
