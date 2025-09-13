@@ -58,7 +58,7 @@ export function HowItWorks() {
                 // --- ВНЕШНЯЯ ОБЕРТКА ДЛЯ ГРАДИЕНТА ---
                 <div
                     key={index}
-                    className="relative p-px rounded-lg lg:from-primary/30 lg:to-primary/60 lg:opacity-70 lg:hover:opacity-100 lg:transition-opacity lg:duration-300"
+                    className="relative p-px rounded-lg opacity-100 hover:opacity-80 transition-opacity duration-300"
                 >
                     {/* --- ВНУТРЕННЯЯ КАРТОЧКА --- */}
                     <Card className="relative h-full rounded-[11px]">

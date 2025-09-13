@@ -45,11 +45,10 @@ export function FAQ() {
                 <div
                     key={item.value}
                     className={cn(
-                        "relative p-px rounded-lg lg:from-primary/30 lg:to-primary/60 lg:transition-opacity lg:duration-300",
-                        // Если элемент открыт, делаем рамку яркой, иначе - полупрозрачной
+                        "relative p-px rounded-lg transition-opacity duration-300",
                         openItem === item.value
-                            ? "lg:opacity-100"
-                            : "lg:opacity-70 lg:hover:opacity-100"
+                            ? "opacity-100"
+                            : "opacity-100 hover:opacity-80"
                     )}
                 >
                     {/* --- ВНУТРЕННИЙ АККОРДЕОН-ЭЛЕМЕНТ --- */}

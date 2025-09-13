@@ -38,7 +38,7 @@ export function LiveExample({ isLoading }: LiveExampleProps) {
         // Оборачиваем все в Dialog
         <Dialog>
             <DialogTrigger asChild>
-                <div className="border rounded-lg p-4 bg-muted/40 cursor-pointer hover:opacity-90 transition-opacity">
+                <div className="border rounded-lg p-4 bg-muted/40 cursor-pointer hover:opacity-90 transition-opacity duration-300">
                     <Image
                         src={imageSrc}
                         alt="Example of a generated GitHub analysis dashboard"
